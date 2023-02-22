@@ -51,7 +51,6 @@ public class MemberDao {
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			
 			rs =  pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -64,7 +63,6 @@ public class MemberDao {
 				
 				memberDB.add(dto);
 			}
-			
 			return memberDB;
 			
 		}catch(SQLException e) {
