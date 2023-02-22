@@ -28,9 +28,12 @@ public class SeatDao {
 		String sql = "select * from Seat";
 		
 		try {
+			System.out.println(pstmt);
+			
 			pstmt = conn.prepareStatement(sql);
 			
-			rs = pstmt.executeQuery();
+			rs =  pstmt.executeQuery();
+			
 			System.out.println(rs.next());
 			
 			while(rs.next()) {
