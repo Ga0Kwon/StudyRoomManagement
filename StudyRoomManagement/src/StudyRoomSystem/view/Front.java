@@ -37,6 +37,7 @@ public class Front {
 				}
 			}catch(InputMismatchException e) {
 				System.err.println("잘못 입력하셨습니다.");
+				scanner = new Scanner(System.in);
 			}catch(Exception e) {
 				System.err.println("프로그램 오류 관리자에게 문의하세요.");
 			}
