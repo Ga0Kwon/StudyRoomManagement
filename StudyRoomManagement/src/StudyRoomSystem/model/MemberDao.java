@@ -1,38 +1,23 @@
 package StudyRoomSystem.model;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MemberDao {
 	
-	private static Connection conn;
+	private static Connection conn = ConnectDao.getInstance().returnConnectDao();
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	//싱그톤
+	
+	//싱글톤
 	private static MemberDao dao = new MemberDao();
 	
-	public MemberDao() {
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-			
-			conn = DriverManager.getConnection(
-					"jdbc:oracle:thin:@192.168.219.113:1521/orcl",
-					"java", //사용자
-					"oracle" //비밀번호
-					);
-			
-			
-		}catch(ClassNotFoundException e) {
-			System.out.println("찾을 수 없음 " + e.getMessage());
-		}
-		catch(SQLException e) {
-			System.out.println("DB연동 실패 : " + e.getMessage());
-		}
-	}
+	public MemberDao() {}
 	
 	public static MemberDao getInstance() {
 		return dao;
@@ -58,4 +43,47 @@ public class MemberDao {
 			return false;
 		}
 	}
+	
+	// * 회원 정보를 모두 받아오는 함수 + 로그인
+	public ArrayList<MemberDto> returnMemberDB(){
+		ArrayList<MemberDto> memberDB = new ArrayList<>();
+		
+		String sql = "select * from customer";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			rs =  pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberDto dto = new MemberDto(
+						rs.getInt(1), 
+						rs.getString(2), 
+						rs.getString(3), 
+						rs.getString(4), 
+						rs.getString(5));
+				
+				memberDB.add(dto);
+			}
+			
+			return memberDB;
+			
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	//멤버 고유번호로 해당 고객의 이름 받아오기
+	public String findName(int uid) {
+		ArrayList<MemberDto> memberList = returnMemberDB();
+		
+		for(MemberDto dto : memberList) {
+			if(dto.getCustomer_UID() == uid) {
+				return dto.getCustomer_NAME();
+			}
+		}
+		return null; //해당 멤버 번호로 찾지 못할 경우
+	}
+	
 }

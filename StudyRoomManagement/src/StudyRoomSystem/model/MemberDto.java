@@ -22,6 +22,15 @@ public class MemberDto {
 		this.customer_TEL = customer_TEL;
 	}
 
+	public MemberDto(int customer_UID, String customer_ID, String customer_PW, String customer_NAME,
+			String customer_TEL) {
+		this.customer_UID = customer_UID;
+		this.customer_ID = customer_ID;
+		this.customer_PW = customer_PW;
+		this.customer_NAME = customer_NAME;
+		this.customer_TEL = customer_TEL;
+	}
+
 
 
 	//3. 메소드
