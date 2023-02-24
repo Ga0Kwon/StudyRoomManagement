@@ -26,7 +26,7 @@ public class ConnectDao {
 			
 			conn = DriverManager.getConnection(
 					"jdbc:oracle:thin:@192.168.219.113:1521/orcl",
-					"java", //사용자
+					"java", //사용자2
 					"oracle" //비밀번호
 					);
 //			System.out.println("연결 성공!");

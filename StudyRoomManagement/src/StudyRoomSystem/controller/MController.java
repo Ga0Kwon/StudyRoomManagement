@@ -14,6 +14,12 @@ public class MController {
 		return mc;
 	}
 	
+	//로그인한 Member 객체를 담기 위해
+	private MemberDto logSeasion = null;
+
+	public MemberDto getLogSeasion() {
+		return logSeasion;
+	}
 	
 	//회원가입
 	public int signUp(String id, String pw, String confirmPw, String name, String tel) {
@@ -50,6 +56,7 @@ public class MController {
 		
 		for(int i = 0; i < memberDB.size(); i++) {
 			if((memberDB.get(i).getCustomer_ID().equals(id))&&(memberDB.get(i).getCustomer_PW().equals(pw))){
+				logSeasion = memberDB.get(i);
 				return memberDB.get(i).getCustomer_UID();
 			}
 		}

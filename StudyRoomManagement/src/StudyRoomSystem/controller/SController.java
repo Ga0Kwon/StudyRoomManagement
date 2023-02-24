@@ -18,4 +18,17 @@ public class SController {
 		return SeatDao.getInstance().printSeat();
 	}
 	
+	//좌석 선택 
+	public int selectSeat(int seatNo) {
+		
+		// 좌석에 누가 앉아있을 경우[-2]
+		
+		return SeatDao.getInstance().selectSeat(seatNo);
+	}
+	
+	// 현재 로그인한 상대가 들어간 자리를 출력하는 함수 or 들어간 자리가 없을 경우 판단
+	public int checkSeat(int memberUid) {
+		return SeatDao.getInstance().alreadySelected(memberUid);
+	}
+	
 }

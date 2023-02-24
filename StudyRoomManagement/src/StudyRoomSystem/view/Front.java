@@ -39,6 +39,7 @@ public class Front {
 				System.err.println("잘못 입력하셨습니다.");
 				scanner = new Scanner(System.in);
 			}catch(Exception e) {
+				System.out.println(e.getMessage());
 				System.err.println("프로그램 오류 관리자에게 문의하세요.");
 			}
 		}
@@ -85,25 +86,84 @@ public class Front {
 	
 	//2-1) 좌석 출력
 	public void printSeat() {
-		ArrayList<SeatDto> seatDB = SController.getInstance().printSeat();
-		System.out.println("-------------------좌석현황-------------------");
-		for(int i = 0; i < seatDB.size(); i++) {
-			if(seatDB.get(i).getStatus() == 0) { //사용가능이면
-				System.out.println("----\n"
-						+ "|\t\t|\n"
-						+ "|\t/|"
-						+ "|/\t|"
-						+ "_\t\t_");
-			}else {
-				String name = MemberDao.getInstance().findName(seatDB.get(i).getCustomer_UID());
+		while(true) {
+			ArrayList<SeatDto> seatDB = SController.getInstance().printSeat();
+			System.out.println(seatDB.get(1).getStatus());
+			System.out.println("-------------------좌석현황-------------------");
+			int seaction = 1;
+			for(int i = 0; i < seatDB.size(); i++) {
+				if(seatDB.get(i).getStatus() == 0) { //사용가능이면
+					System.out.print(" ---------------\n"+"|\t" +(i+1)+"\t|\n"+"|\t\t| \n"+"|\t\t| \n "+"---------------\n");
+					if(seaction%4 == 0) {
+						System.out.println();
+					}
+					seaction++;
+				}else {
+					String name = MemberDao.getInstance().findName(seatDB.get(i).getCustomer_UID());
+					
+					if(seaction%4 == 0) {
+						System.out.println();
+					}
+					System.out.println(" ---------------\n"+"|\t" +(i+1)+"\t|\n"+ "|    " +seatDB.get(i).getCustomer_UID()+"번 회원님    |\n" +"|      "+name+"     | \n "+ "---------------\n");
+					
+					seaction++;
+				}
+			}
+			
+			System.out.println("------------------------------------------");
+			
+			int checkSeat = SController.getInstance().checkSeat(MController.getInstance().getLogSeasion().getCustomer_UID());
+			
+			if(checkSeat == 0) {
+				System.out.print("1. 1일권 결제 2. 정기권 결제 3. 로그아웃 : ");
+				int choice = scanner.nextInt();
+				if(choice == 1) {
+					/*1일권 결제*/
+					
+					System.out.print("좌석 선택 : ");
+					int select = scanner.nextInt();
+					
+					selectSeat(select); //좌석 선택 함수
+				}else if(choice == 2) {
+					/*정기권 결제*/
+					
+					System.out.print("좌석 선택 : ");
+					int select = scanner.nextInt();
+					selectSeat(select); //좌석 선택 함수
+				}else if(choice == 3) {
+					return;
+				}
 				
-				System.out.println("----\n"
-						+ "|"+seatDB.get(i).getCustomer_UID()+"|\n"
-						+ "|"+ name +"|"
-						+ "|/\t|"
-						+ "_\t\t_");
+				int select = scanner.nextInt();
+				
+				selectSeat(select); //좌석 선택 함수
+				
+			}else {
+				System.out.print("1. 퇴실 2. 좌석 이동 3. 외출 4.로그아웃 : ");
+				int select = scanner.nextInt();
+				if(select == 1) {
+					
+				}else if(select == 2) {
+					
+				}else if(select == 3) {
+					
+				}if(select == 4) { //4. 로그아웃
+					return;
+				}
+				
 			}
 		}
 	}
 	
+	// 좌석 선택
+	public void selectSeat(int selectSeatNo) {
+		int result = SController.getInstance().selectSeat(selectSeatNo);
+		if(result == -2 ){ // 현재 로그인한 사용자 들어간 자리가 따로 있을 경우
+			System.err.println("[안내] 현재 사용중인 자리입니다.");
+		}else if(result == 0) { //사용처리가 된 경우
+			System.out.println("[" + selectSeatNo+ "번 좌석] 자리가 예약되었습니다. 입장가능합니다.");
+		}else if(result == -1) {
+			System.err.println("[DB에러]관리자에게 문의해주세요.");
+		}
+	}
 }
