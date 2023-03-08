@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 import StudyRoomSystem.controller.MController;
 import StudyRoomSystem.controller.SController;
-import StudyRoomSystem.model.ConnectDao;
-import StudyRoomSystem.model.MemberDao;
-import StudyRoomSystem.model.MemberDto;
-import StudyRoomSystem.model.SeatDto;
+import StudyRoomSystem.model.dao.ConnectDao;
+import StudyRoomSystem.model.dao.MemberDao;
+import StudyRoomSystem.model.dto.MemberDto;
+import StudyRoomSystem.model.dto.SeatDto;
 
 public class Front {
 	private Scanner scanner = new Scanner(System.in);
@@ -26,7 +26,7 @@ public class Front {
 	public void index() {
 		while(true) {
 			try {
-				System.out.println("-------------------스터디룸-------------------");
+				System.out.println("--------------------스터디룸--------------------");
 				System.out.print("1. 회원가입 2. 로그인 : ");
 				int choice = scanner.nextInt();
 				
@@ -47,7 +47,7 @@ public class Front {
 	
 	//1. 회원 가입
 	public void signUp() {
-		System.out.println("-------------------회원가입-------------------");
+		System.out.println("--------------------회원가입--------------------");
 		System.out.print("아이디 : "); String id  = scanner.next();
 		System.out.print("비밀번호 : "); String pw  = scanner.next();
 		System.out.print("비밀번호 확인 : "); String confirmPw  = scanner.next();
@@ -69,7 +69,7 @@ public class Front {
 	
 	//2. 로그인
 	public void logIn() {
-		System.out.println("-------------------로그인--------------------");
+		System.out.println("--------------------로그인---------------------");
 		System.out.print("아이디 : "); String id  = scanner.next();
 		System.out.print("비밀번호 : "); String pw  = scanner.next();
 		
@@ -89,11 +89,12 @@ public class Front {
 		while(true) {
 			ArrayList<SeatDto> seatDB = SController.getInstance().printSeat();
 			System.out.println(seatDB.get(1).getStatus());
-			System.out.println("-------------------좌석현황-------------------");
+			System.out.println("--------------------좌석현황--------------------");
 			int seaction = 1;
 			for(int i = 0; i < seatDB.size(); i++) {
 				if(seatDB.get(i).getStatus() == 0) { //사용가능이면
-					System.out.print(" ---------------\n"+"|\t" +(i+1)+"\t|\n"+"|\t\t| \n"+"|\t\t| \n "+"---------------\n");
+					System.out.printf("[            ]");
+					
 					if(seaction%4 == 0) {
 						System.out.println();
 					}
@@ -101,16 +102,17 @@ public class Front {
 				}else {
 					String name = MemberDao.getInstance().findName(seatDB.get(i).getCustomer_UID());
 					
+					System.out.printf("[ 좌석:%d %s ]", seatDB.get(i).getSeat_UID(), name);
+					
 					if(seaction%4 == 0) {
 						System.out.println();
 					}
-					System.out.println(" ---------------\n"+"|\t" +(i+1)+"\t|\n"+ "|    " +seatDB.get(i).getCustomer_UID()+"번 회원님    |\n" +"|      "+name+"     | \n "+ "---------------\n");
 					
 					seaction++;
 				}
 			}
 			
-			System.out.println("------------------------------------------");
+			System.out.println("--------------------------------------------");
 			
 			int checkSeat = SController.getInstance().checkSeat(MController.getInstance().getLogSeasion().getCustomer_UID());
 			
@@ -119,17 +121,16 @@ public class Front {
 				int choice = scanner.nextInt();
 				if(choice == 1) {
 					/*1일권 결제*/
-					
 					System.out.print("좌석 선택 : ");
 					int select = scanner.nextInt();
 					
 					selectSeat(select); //좌석 선택 함수
 				}else if(choice == 2) {
 					/*정기권 결제*/
-					
 					System.out.print("좌석 선택 : ");
 					int select = scanner.nextInt();
 					selectSeat(select); //좌석 선택 함수
+					
 				}else if(choice == 3) {
 					return;
 				}
@@ -142,7 +143,21 @@ public class Front {
 				System.out.print("1. 퇴실 2. 좌석 이동 3. 외출 4.로그아웃 : ");
 				int select = scanner.nextInt();
 				if(select == 1) {
+					int seatNo = SController.getInstance().checkSeat(MController.getInstance().getLogSeasion().getCustomer_UID());
 					
+					System.out.printf("[확인] %d번 자리에서 퇴실하시겠습니까?  1. Yes  2 No", seatNo);
+					int ch = scanner.nextInt();
+					if(ch == 1) {
+						boolean result = SController.getInstance().outSeat(seatNo);
+						System.out.println(result);
+						if(result) {
+							System.out.println("퇴실완료 되었습니다.");
+						}else {
+							System.out.println("퇴실실패하였습니다. 관리자에게 문의해주세요.");
+						}
+					}if(ch == 2) {
+						return;
+					}
 				}else if(select == 2) {
 					
 				}else if(select == 3) {

@@ -2,8 +2,8 @@ package StudyRoomSystem.controller;
 
 import java.util.ArrayList;
 
-import StudyRoomSystem.model.MemberDao;
-import StudyRoomSystem.model.MemberDto;
+import StudyRoomSystem.model.dao.MemberDao;
+import StudyRoomSystem.model.dto.MemberDto;
 
 
 public class MController {

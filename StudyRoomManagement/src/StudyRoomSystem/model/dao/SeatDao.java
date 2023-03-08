@@ -1,4 +1,4 @@
-package StudyRoomSystem.model;
+package StudyRoomSystem.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,12 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import StudyRoomSystem.controller.MController;
+import StudyRoomSystem.model.dto.SeatDto;
 
-public class SeatDao {
-	
-	private static Connection conn = ConnectDao.getInstance().returnConnectDao();
-	private PreparedStatement pstmt;
-	private ResultSet rs;
+public class SeatDao extends ConnectDao{
 	
 	//*싱글톤
 	private static SeatDao seatDao = new SeatDao();
@@ -31,9 +28,9 @@ public class SeatDao {
 		
 		try {
 			
-			pstmt = conn.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
-			rs =  pstmt.executeQuery();
+			rs =  ps.executeQuery();
 			
 //			System.out.println(rs.next());
 			
@@ -71,13 +68,13 @@ public class SeatDao {
 		}
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
-			pstmt.setInt(1, 1);
-			pstmt.setInt(2, loginedMemberUid);
-			pstmt.setInt(3, seatNo);
+			ps.setInt(1, 1);
+			ps.setInt(2, loginedMemberUid);
+			ps.setInt(3, seatNo);
 			
-			pstmt.executeUpdate();
+			ps.executeUpdate();
 			
 			return 0;
 			
@@ -94,11 +91,11 @@ public class SeatDao {
 		String sql = "select * from Seat where Seat_UID = ?";
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
-			pstmt.setInt(1, seatNo);
+			ps.setInt(1, seatNo);
 			
-			rs =  pstmt.executeQuery();
+			rs =  ps.executeQuery();
 			
 			rs.next();
 			
@@ -119,11 +116,11 @@ public class SeatDao {
 		String sql = "select * from Seat where customer_UID = ?";
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
-			pstmt.setInt(1, memberUid);
+			ps.setInt(1, memberUid);
 			
-			rs = pstmt.executeQuery();
+			rs = ps.executeQuery();
 			
 			if(!rs.next()){ //들어간 자리가 없을 경우
 				return 0;
@@ -134,6 +131,26 @@ public class SeatDao {
 		}catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return -1;
+		}
+	}
+	//퇴실
+	public boolean outSeat(int seatNo) {
+		String sql = "update Seat set Status = 0, customer_uid = -1 where customer_uid = ? and seat_uid = ?";
+		
+		try {
+			ps = con.prepareStatement(sql);
+			
+			ps.setInt(1, MController.getInstance().getLogSeasion().getCustomer_UID());
+			System.out.println(MController.getInstance().getLogSeasion().getCustomer_UID());
+			ps.setInt(2, seatNo);
+			
+			ps.executeUpdate();
+			
+			return true;
+			
+		}catch (Exception e) {
+			System.err.println(e.getMessage());
+			return false;
 		}
 	}
 }

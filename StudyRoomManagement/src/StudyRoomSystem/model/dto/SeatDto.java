@@ -1,4 +1,4 @@
-package StudyRoomSystem.model;
+package StudyRoomSystem.model.dto;
 
 public class SeatDto {
 	//1. 필드

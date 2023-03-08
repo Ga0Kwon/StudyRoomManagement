@@ -1,4 +1,4 @@
-package StudyRoomSystem.model;
+package StudyRoomSystem.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,13 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class MemberDao {
-	
-	private static Connection conn = ConnectDao.getInstance().returnConnectDao();
-	private PreparedStatement pstmt;
-	private ResultSet rs;
-	
-	
+import StudyRoomSystem.model.dto.MemberDto;
+
+public class MemberDao extends ConnectDao{
+
 	//싱글톤
 	private static MemberDao dao = new MemberDao();
 	
@@ -27,14 +24,14 @@ public class MemberDao {
 		String sql = " " + "INSERT INTO customer (customer_UID, customer_ID, customer_PW, customer_NAME, customer_TEL) VALUES (Customer_Seq.NEXTVAL, ? , ?, ?, ?)";
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			ps = con.prepareStatement(sql);
 			
-			pstmt.setString(1, dto.getCustomer_ID());
-			pstmt.setString(2, dto.getCustomer_PW());
-			pstmt.setString(3, dto.getCustomer_NAME());
-			pstmt.setString(4, dto.getCustomer_TEL());
+			ps.setString(1, dto.getCustomer_ID());
+			ps.setString(2, dto.getCustomer_PW());
+			ps.setString(3, dto.getCustomer_NAME());
+			ps.setString(4, dto.getCustomer_TEL());
 			
-			pstmt.executeUpdate();
+			ps.executeUpdate();
 			
 			return true;
 		}catch(SQLException e) {
@@ -50,8 +47,8 @@ public class MemberDao {
 		String sql = "select * from customer";
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
-			rs =  pstmt.executeQuery();
+			ps = con.prepareStatement(sql);
+			rs =  ps.executeQuery();
 			
 			while(rs.next()) {
 				MemberDto dto = new MemberDto(
