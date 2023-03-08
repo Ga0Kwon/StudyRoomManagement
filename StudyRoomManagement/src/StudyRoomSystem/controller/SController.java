@@ -32,7 +32,6 @@ public class SController {
 	
 	//퇴실
 	public boolean outSeat(int seatNo) {
-		System.out.println(seatNo);
 		return SeatDao.getInstance().outSeat(seatNo);
 	}
 	

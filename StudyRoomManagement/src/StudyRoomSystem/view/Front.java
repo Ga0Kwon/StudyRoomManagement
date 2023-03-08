@@ -149,7 +149,7 @@ public class Front {
 					int ch = scanner.nextInt();
 					if(ch == 1) {
 						boolean result = SController.getInstance().outSeat(seatNo);
-						System.out.println(result);
+						
 						if(result) {
 							System.out.println("퇴실완료 되었습니다.");
 						}else {

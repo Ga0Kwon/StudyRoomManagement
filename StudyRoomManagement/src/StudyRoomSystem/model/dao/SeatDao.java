@@ -41,7 +41,7 @@ public class SeatDao extends ConnectDao{
 						rs.getInt(3), 
 						rs.getInt(4));
 				
-//				System.out.println(rs.getInt(1));
+				System.out.println(dto);
 				seatDB.add(dto);
 			}
 			
@@ -141,7 +141,6 @@ public class SeatDao extends ConnectDao{
 			ps = con.prepareStatement(sql);
 			
 			ps.setInt(1, MController.getInstance().getLogSeasion().getCustomer_UID());
-			System.out.println(MController.getInstance().getLogSeasion().getCustomer_UID());
 			ps.setInt(2, seatNo);
 			
 			ps.executeUpdate();
