@@ -37,9 +37,11 @@ public class SController {
 	
 	// 자리 이동
 	public int moveSeat(int changeSeatNo) {
-		SeatDao.getInstance().moveSeat();
-		
-		return SeatDao.getInstance().selectSeat(changeSeatNo);
+		if(SeatDao.getInstance().moveSeat()) {
+			return SeatDao.getInstance().selectSeat(changeSeatNo);
+		}else {
+			return -3; //자리 이동할 수 없는 경우
+		}
 	}
 	
 }

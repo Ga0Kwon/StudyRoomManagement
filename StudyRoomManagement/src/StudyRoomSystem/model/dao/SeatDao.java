@@ -151,14 +151,13 @@ public class SeatDao extends ConnectDao{
 	
 	//기존 자리 비우기 
 	public boolean moveSeat() {
-		int memberNo = MController.getInstance().getLogSeasion().getCustomer_UID();
 		
 		//어차피 한명당 한 자리밖에 못들어가기 때문에 조건문에 customer_uid 써도 된다.
-		String sql = "update Seat set Status = 0 customer_uid = -1 where customer_uid = ?";
+		String sql = "update Seat set Status = 0, customer_uid = -1 where customer_uid = ?";
 		
 		try {
 			ps = con.prepareStatement(sql);
-			ps.setInt(1, memberNo);
+			ps.setInt(1, MController.getInstance().getLogSeasion().getCustomer_UID());
 			
 			ps.executeUpdate();
 			
