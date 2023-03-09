@@ -35,4 +35,12 @@ public class SController {
 		return SeatDao.getInstance().outSeat(seatNo);
 	}
 	
+	// 자리 이동
+	public int moveSeat(int changeSeatNo) {
+		SeatDao.getInstance().moveSeat();
+		
+		return SeatDao.getInstance().selectSeat(changeSeatNo);
+	}
+	
 }
+

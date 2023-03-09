@@ -24,7 +24,7 @@ public class SeatDao extends ConnectDao{
 	public ArrayList<SeatDto> printSeat(){
 		ArrayList<SeatDto> seatDB = new ArrayList<>();
 		
-		String sql = "select * from Seat";
+		String sql = "select * from seat";
 		
 		try {
 			
@@ -32,16 +32,12 @@ public class SeatDao extends ConnectDao{
 			
 			rs =  ps.executeQuery();
 			
-//			System.out.println(rs.next());
-			
 			while(rs.next()) {
 				SeatDto dto = new SeatDto(
 						rs.getInt(1), 
 						rs.getInt(2), 
 						rs.getInt(3), 
 						rs.getInt(4));
-				
-				System.out.println(dto);
 				seatDB.add(dto);
 			}
 			
@@ -84,8 +80,8 @@ public class SeatDao extends ConnectDao{
 			return -1;
 		}
 	}
-	/* 좌석 유효성 검사 */
 	
+	/* 좌석 유효성 검사 */
 	//1. 이미 누가 선택한 좌석인지
 	public int whoSelected(int seatNo) {
 		String sql = "select * from Seat where Seat_UID = ?";
@@ -147,6 +143,26 @@ public class SeatDao extends ConnectDao{
 			
 			return true;
 			
+		}catch (Exception e) {
+			System.err.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	//기존 자리 비우기 
+	public boolean moveSeat() {
+		int memberNo = MController.getInstance().getLogSeasion().getCustomer_UID();
+		
+		//어차피 한명당 한 자리밖에 못들어가기 때문에 조건문에 customer_uid 써도 된다.
+		String sql = "update Seat set Status = 0 customer_uid = -1 where customer_uid = ?";
+		
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, memberNo);
+			
+			ps.executeUpdate();
+			
+			return true;
 		}catch (Exception e) {
 			System.err.println(e.getMessage());
 			return false;
